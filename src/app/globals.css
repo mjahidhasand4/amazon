@@ -60,3 +60,8 @@
 .flag {
     background-image: url(/icons/flags.png);
 }
+
+.icons {
+    background-image: url(/icons/icons.png);
+    background-size: 400px 750px;
+}
