@@ -1,3 +1,5 @@
+import { Children } from "react";
+
 const Input = ({
   name,
   title,
@@ -7,6 +9,7 @@ const Input = ({
   type = "text",
   error,
   _error,
+  success,
   _class,
   inputStyle,
   children,
@@ -36,14 +39,26 @@ const Input = ({
           "border-[#CC0C39] shadow-[0_0_0_1px_#cc0c39_inset] focus:shadow-[0_0_0_1px_#cc0c39_inset,_0_0_0_3px_#ffe3e3]"
         }`}
       />
-      {children}
-      {info && !error && (
+      {Children.toArray(children)[0]}
+      {info && !error && !success && (
         <div className="mt-[6px] flex items-center">
           <i
             style={{ backgroundPosition: "-166px -130px" }}
             className="icons w-[14px] h-[13px]"
           />
           <span className="text-[#2b2b2b] text-[12px] font-ember">{info}</span>
+        </div>
+      )}
+
+      {success && (
+        <div className="flex items-centr gap-1 mt-[6px]">
+          <i
+            style={{ backgroundPosition: "-457px -144px" }}
+            className="_icons w-[18px] h-[18px]"
+          />
+          <span className="text-[#067D62] text-[12px] font-ember">
+            {success}
+          </span>
         </div>
       )}
 
@@ -57,12 +72,7 @@ const Input = ({
         </div>
       )}
 
-      {_error && (
-        <div
-          className="flex items-centr mt-[6px]"
-          dangerouslySetInnerHTML={{ __html: _error }}
-        />
-      )}
+      {Children.toArray(children)[1]}
     </div>
   );
 };
@@ -76,8 +86,9 @@ interface InputProps {
   value?: string;
   info?: string;
   error?: string;
+  success?: string;
   placeholder?: string | undefined;
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   _error?: string;
   _class?: string;
   inputStyle?: React.CSSProperties | undefined;

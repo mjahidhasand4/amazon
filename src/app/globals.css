@@ -65,3 +65,8 @@
     background-image: url(/icons/icons.png);
     background-size: 400px 750px;
 }
+
+._icons {
+    background-image: url(/icons/_icons.png);
+    background-size: 512px 256px;
+}

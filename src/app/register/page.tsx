@@ -29,6 +29,7 @@ const Register = () => {
   const [isOpenCountryList, setIsOpenCountryList] = useState(false);
   const [callingCode, setCallingCode] = useState("US +1");
   const [width, setWidth] = useState(36);
+  const [accountError, setAccountError] = useState("");
 
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const ref = useClickOutside(() => setIsOpenCountryList(false));
@@ -102,6 +103,9 @@ const Register = () => {
         });
 
         if (response.ok) router.replace("verify-otp");
+
+        const { message } = await response.json();
+        setAccountError(message);
       } catch (error) {
         console.error("An error occurred during registration:", error);
       }
@@ -161,6 +165,20 @@ const Register = () => {
                   )}
                 </div>
               )}
+            </div>
+          )}
+
+          {accountError && (
+            <div className="flex items-centr mt-[6px]">
+              <i
+                style={{ backgroundPosition: "-141px -130px" }}
+                className="icons w-[14px] h-[13px]"
+              />
+              <p className="text-[#c40000] text-[12px] font-ember">
+                {accountError} {" "}
+                <A href="sign-in">Sign in</A> and{" "}
+                <A href="learn-more">learn more</A>
+              </p>
             </div>
           )}
         </Input>
