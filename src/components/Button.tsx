@@ -3,11 +3,13 @@
 const Button = ({
   variant = "primary",
   _class,
+  type = "button",
   children,
   ...rest
 }: ButtonProps) => {
   return (
     <button
+      type={type}
       className={`${
         variant === "primary" &&
         "border border-[#FCD200] bg-[#FFD814] hover:border-[#F2C200] hover:bg-[#F7CA00]"
@@ -37,5 +39,6 @@ interface ButtonProps {
   children: React.ReactNode;
   variant?: "primary" | "secondary" | "text";
   _class?: string;
+  type: "submit" | "reset" | "button" | undefined;
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }

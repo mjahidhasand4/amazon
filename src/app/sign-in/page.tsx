@@ -5,31 +5,26 @@ import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react";
 import countries from "../../../database/country.json";
 import { useRouter } from "next/navigation";
 
-const Register = () => {
+const SignIn = () => {
   const router = useRouter();
   const emailReg = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
   const mobileReg = /^\d+$/;
 
   const [data, setData] = useState({
-    name: "",
     contact: "",
     countryCode: "",
     password: "",
-    confirmPassword: "",
   });
 
   const [errors, setErrors] = useState({
-    name: "",
     contact: "",
     password: "",
-    confirmPassword: "",
   });
 
   const [isMobile, setIsMobile] = useState(false);
   const [isOpenCountryList, setIsOpenCountryList] = useState(false);
   const [callingCode, setCallingCode] = useState("US +1");
   const [width, setWidth] = useState(36);
-  const [accountError, setAccountError] = useState("");
 
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const ref = useClickOutside(() => setIsOpenCountryList(false));
@@ -66,23 +61,14 @@ const Register = () => {
     event.preventDefault();
 
     setErrors({
-      name: "",
       contact: "",
       password: "",
-      confirmPassword: "",
     });
 
-    const { name, contact, password, confirmPassword, countryCode } = data;
+    const { contact, password, countryCode } = data;
 
     setErrors({
-      name: name ? "" : "Enter your name",
       password: password.length >= 6 ? "" : "Minimum 6 characters required",
-      confirmPassword:
-        password && !confirmPassword
-          ? "Type your password again"
-          : password !== confirmPassword
-          ? "Passwords must match"
-          : "",
       contact: !contact
         ? "Enter your mobile number or email"
         : emailReg.test(contact) || mobileReg.test(contact)
@@ -94,41 +80,30 @@ const Register = () => {
 
     if (!hasErrors) {
       try {
-        const response = await fetch("api/register", {
+        const response = await fetch("/api/sign-in", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ name, contact, password, countryCode }),
+          body: JSON.stringify({ contact, password, countryCode }),
         });
 
-        if (response.ok) router.replace("verify-otp");
-
-        const { message } = await response.json();
-        setAccountError(message);
+        if (response.ok) router.replace("/");
       } catch (error) {
         console.error("An error occurred during registration:", error);
       }
     }
   };
 
+  const [isOpenMore, setIsOpenMore] = useState(false);
+  const toggleOpenMore = () => setIsOpenMore((prev) => !prev);
   return (
     <main>
       <form
         className="w-[350px] mt-8 py-[14px] px-[18px] mx-auto border border-[#ddd] rounded-lg"
         onSubmit={onSubmit}
       >
-        <h1 className="text-[#0f1111] text-[28px] font-ember">
-          Create account
-        </h1>
-        <Input
-          name="name"
-          title="Your name"
-          placeholder="First and last name"
-          value={data.name}
-          error={errors.name}
-          onChange={onChange}
-        />
+        <h1 className="text-[#0f1111] text-[28px] font-ember">Sign in</h1>
         <Input
           name="contact"
           title="Mobile number or email"
@@ -167,20 +142,6 @@ const Register = () => {
               )}
             </div>
           )}
-
-          {accountError && (
-            <div className="flex items-centr mt-[6px]">
-              <i
-                style={{ backgroundPosition: "-141px -130px" }}
-                className="icons w-[14px] h-[13px]"
-              />
-              <p className="text-[#c40000] text-[12px] font-ember">
-                {accountError} {" "}
-                <A href="sign-in">Sign in</A> and{" "}
-                <A href="learn-more">learn more</A>
-              </p>
-            </div>
-          )}
         </Input>
         <Input
           name="password"
@@ -192,30 +153,39 @@ const Register = () => {
           error={errors.password}
           onChange={onChange}
         />
-        <Input
-          name="confirmPassword"
-          type="password"
-          title="Re-enter password"
-          value={data.confirmPassword}
-          error={errors.confirmPassword}
-          onChange={onChange}
-        />
-        <Button type="submit" _class="w-full">Continue</Button>
-
+        <Button type="submit" _class="w-full">
+          Continue
+        </Button>
         <p className="text-[12px] my-[18px]">
           By creating an account, you agree to Amazon's &nbsp;
           <A href="">Conditions of Use</A> and <A href="">Privacy Notice</A>.
         </p>
-        <hr />
-        <p className="text-[13px] font-ember mt-[14px]">
-          Already have an account?{" "}
-          <A href="sign-in" _class="text-[13px]">
-            Sign in
-          </A>
-        </p>
+        <Button
+          type="button"
+          variant="text"
+          _class="flex items-center gap-1"
+          onClick={toggleOpenMore}
+        >
+          <i
+            className={`mt-1 mr-1 border-4 border-transparent ${
+              isOpenMore ? "border-b-[#111] mb-2" : "border-t-[#111] "
+            }`}
+          />
+          <span>Need help?</span>
+        </Button>
+        {isOpenMore && (
+          <div className="flex flex-col items-start ml-6">
+            <A href="forgot-password" _class="text-[13px]">
+              Forgot your password?
+            </A>
+            <A href="sign-in-issues" _class="text-[13px]">
+              Other issues with Sign-In
+            </A>
+          </div>
+        )}
       </form>
     </main>
   );
 };
 
-export default Register;
+export default SignIn;
