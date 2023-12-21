@@ -63,15 +63,15 @@ const VerifyOTP = () => {
         <p className="text-[#0f1111] text-[14px] font-ember pb-[14px]">
           To verify your{" "}
           {info.type === "mobile_phone_number" ? "mobile number" : "email"},
-          we've sent a One Time Password (OTP) to {info.contact}{" "}
+          we&apos;ve sent a One Time Password (OTP) to {info.contact}{" "}
           <A href="register" _class="text-[14px]">
             (Change)
           </A>
         </p>
         <Input name="otp" title="Enter OTP" _class="w-full" success={success} />
-        <Button _class="w-full">Create your Amazon account</Button>
+        <Button type="submit" _class="w-full">Create your Amazon account</Button>
         <p className="text-[12px] my-[18px]">
-          By creating an account, you agree to Amazon's &nbsp;
+          By creating an account, you agree to Amazon&apos;s &nbsp;
           <A href="">Conditions of Use</A> and <A href="">Privacy Notice</A>.
         </p>
         <Button variant="text" onClick={onClick}>
@@ -81,7 +81,7 @@ const VerifyOTP = () => {
         {success && (
           <div>
             <p className="text-[#0f1111] text-[12px]">
-              Note: If you didn't receive our verification{" "}
+              Note: If you didn&apos;t receive our verification{" "}
               {info.type === "mobile_phone_number" ? "code" : "email"}:
             </p>
             <ul className="pl-4">

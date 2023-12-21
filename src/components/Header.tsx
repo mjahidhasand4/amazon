@@ -1,6 +1,11 @@
+"use client";
+import { UserContext } from "@/context";
 import Link from "next/link";
+import { useContext } from "react";
 
 const Header = () => {
+  const user = useContext(UserContext);
+
   return (
     <header>
       <div className="h-[60px] px-[11px] bg-[#00453e] flex items-center">
@@ -63,7 +68,7 @@ const Header = () => {
         <div>
           <button className="h-[50px] px-[9px] border border-transparent hover:border-white rounded-sm flex flex-col justify-center gap-0.5">
             <span className="text-white text-[12px] font-ember leading-none">
-              Hello, sign in
+              Hello, {user.name ? user.name.split(" ")[0] : "sign in"}
             </span>
             <span className="flex items-center gap-1">
               <span className="text-white text-[14px] font-ember font-bold leading-none">
@@ -105,35 +110,106 @@ const Header = () => {
               style={{ backgroundPosition: "-172px -255px" }}
               className="asset w-[17px] h-[14px]"
             />
-            <span className="text-white text-[14px] font-ember font-bold">All</span>
+            <span className="text-white text-[14px] font-ember font-bold">
+              All
+            </span>
           </button>
 
-          <Link href="hot-deals" className="text-[#ffdfd7] text-[14px] font-ember font-bold py-2 px-[9px] border border-transparent hover:border-white rounded-sm">Last Minute Deals</Link>
-          <Link href="gift-cards" className="text-white text-[14px] font-ember py-2 px-[9px] border border-transparent hover:border-white rounded-sm flex items-center gap-1">
+          <Link
+            href="hot-deals"
+            className="text-[#ffdfd7] text-[14px] font-ember font-bold py-2 px-[9px] border border-transparent hover:border-white rounded-sm"
+          >
+            Last Minute Deals
+          </Link>
+          <Link
+            href="gift-cards"
+            className="text-white text-[14px] font-ember py-2 px-[9px] border border-transparent hover:border-white rounded-sm flex items-center gap-1"
+          >
             <span>Gift Cards</span>
             <i className="mt-1 border-4 border-transparent border-t-[#a7acb2]" />
           </Link>
-          <Link href="medical-care" className="text-white text-[14px] font-ember py-2 px-[9px] border border-transparent hover:border-white rounded-sm  flex items-center gap-1">
+          <Link
+            href="medical-care"
+            className="text-white text-[14px] font-ember py-2 px-[9px] border border-transparent hover:border-white rounded-sm  flex items-center gap-1"
+          >
             <span>Medical Care</span>
             <i className="mt-1 border-4 border-transparent border-t-[#a7acb2]" />
           </Link>
-          <Link href="best-sellers" className="text-white text-[14px] font-ember py-2 px-[9px] border border-transparent hover:border-white rounded-sm">Best Sellers</Link>
-          <Link href="amazon-basics" className="text-white text-[14px] font-ember py-2 px-[9px] border border-transparent hover:border-white rounded-sm">Amazon Basics</Link>
-          <Link href="registry" className="text-white text-[14px] font-ember py-2 px-[9px] border border-transparent hover:border-white rounded-sm">Registry</Link>
-          <Link href="todays-deals" className="text-white text-[14px] font-ember py-2 px-[9px] border border-transparent hover:border-white rounded-sm">Today's Deals</Link>
-          <Link href="new-releases" className="text-white text-[14px] font-ember py-2 px-[9px] border border-transparent hover:border-white rounded-sm">New Releases</Link>
-          <Link href="prime" className="text-white text-[14px] font-ember py-2 px-[9px] border border-transparent hover:border-white rounded-sm  flex items-center gap-1">
+          <Link
+            href="best-sellers"
+            className="text-white text-[14px] font-ember py-2 px-[9px] border border-transparent hover:border-white rounded-sm"
+          >
+            Best Sellers
+          </Link>
+          <Link
+            href="amazon-basics"
+            className="text-white text-[14px] font-ember py-2 px-[9px] border border-transparent hover:border-white rounded-sm"
+          >
+            Amazon Basics
+          </Link>
+          <Link
+            href="registry"
+            className="text-white text-[14px] font-ember py-2 px-[9px] border border-transparent hover:border-white rounded-sm"
+          >
+            Registry
+          </Link>
+          <Link
+            href="todays-deals"
+            className="text-white text-[14px] font-ember py-2 px-[9px] border border-transparent hover:border-white rounded-sm"
+          >
+            Today&apos;s Deals
+          </Link>
+          <Link
+            href="new-releases"
+            className="text-white text-[14px] font-ember py-2 px-[9px] border border-transparent hover:border-white rounded-sm"
+          >
+            New Releases
+          </Link>
+          <Link
+            href="prime"
+            className="text-white text-[14px] font-ember py-2 px-[9px] border border-transparent hover:border-white rounded-sm  flex items-center gap-1"
+          >
             <span>Prime</span>
             <i className="mt-1 border-4 border-transparent border-t-[#a7acb2]" />
           </Link>
-          <Link href="customer" className="text-white text-[14px] font-ember py-2 px-[9px] border border-transparent hover:border-white rounded-sm">Customer</Link>
-          <Link href="service" className="text-white text-[14px] font-ember py-2 px-[9px] border border-transparent hover:border-white rounded-sm">Service</Link>
-          <Link href="music" className="text-white text-[14px] font-ember py-2 px-[9px] border border-transparent hover:border-white rounded-sm">Music</Link>
-          <Link href="books" className="text-white text-[14px] font-ember py-2 px-[9px] border border-transparent hover:border-white rounded-sm">Books</Link>
-          <Link href="pharmacy" className="text-white text-[14px] font-ember py-2 px-[9px] border border-transparent hover:border-white rounded-sm">Pharmacy</Link>
+          <Link
+            href="customer"
+            className="text-white text-[14px] font-ember py-2 px-[9px] border border-transparent hover:border-white rounded-sm"
+          >
+            Customer
+          </Link>
+          <Link
+            href="service"
+            className="text-white text-[14px] font-ember py-2 px-[9px] border border-transparent hover:border-white rounded-sm"
+          >
+            Service
+          </Link>
+          <Link
+            href="music"
+            className="text-white text-[14px] font-ember py-2 px-[9px] border border-transparent hover:border-white rounded-sm"
+          >
+            Music
+          </Link>
+          <Link
+            href="books"
+            className="text-white text-[14px] font-ember py-2 px-[9px] border border-transparent hover:border-white rounded-sm"
+          >
+            Books
+          </Link>
+          <Link
+            href="pharmacy"
+            className="text-white text-[14px] font-ember py-2 px-[9px] border border-transparent hover:border-white rounded-sm"
+          >
+            Pharmacy
+          </Link>
         </nav>
 
-        <a href="last-minute-deals" className="text-white text-[14px] font-ember font-bold border border-transparent hover:border-white pt-[5px] px-2 pb-[6px] rounded-sm">Last minute deals</a>
+        <a
+          href="last-minute-deals"
+          className="text-white text-[14px] font-ember font-bold border border-transparent hover:border-white pt-[5px] px-2 pb-[6px] rounded-sm"
+        >
+          Last minute deals
+        </a>
       </div>
     </header>
   );

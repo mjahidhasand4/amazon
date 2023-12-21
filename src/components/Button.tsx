@@ -39,6 +39,6 @@ interface ButtonProps {
   children: React.ReactNode;
   variant?: "primary" | "secondary" | "text";
   _class?: string;
-  type: "submit" | "reset" | "button" | undefined;
+  type?: "submit" | "reset" | "button" | undefined;
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }

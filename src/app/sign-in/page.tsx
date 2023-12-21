@@ -157,7 +157,7 @@ const SignIn = () => {
           Continue
         </Button>
         <p className="text-[12px] my-[18px]">
-          By creating an account, you agree to Amazon's &nbsp;
+          By creating an account, you agree to Amazon&apos;s &nbsp;
           <A href="">Conditions of Use</A> and <A href="">Privacy Notice</A>.
         </p>
         <Button
