@@ -70,3 +70,8 @@
     background-image: url(/icons/_icons.png);
     background-size: 512px 256px;
 }
+
+.arrow {
+    background-image: url(/icons/arrow.png);
+    background-size: 68px 52px;
+}

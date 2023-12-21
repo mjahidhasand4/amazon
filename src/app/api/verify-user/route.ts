@@ -10,7 +10,6 @@ interface DecodedToken extends JwtPayload {
 const GET = async () => {
   try {
     const refreshToken = cookies().get("refreshToken");
-    console.log(refreshToken);
 
     if (!refreshToken) {
       return NextResponse.json(
