@@ -1,9 +1,9 @@
 "use client";
 import { A, Button, Input } from "@/components";
 import { useClickOutside } from "@/hooks";
+import { useRouter } from "next/navigation";
 import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react";
 import countries from "../../../database/country.json";
-import { useRouter } from "next/navigation";
 
 const Register = () => {
   const router = useRouter();
@@ -104,8 +104,12 @@ const Register = () => {
 
         if (response.ok) router.replace("verify-otp");
 
-        const { message } = await response.json();
-        setAccountError(message);
+        if (response.status === 409) {
+          const { message, verified } = await response.json();
+          
+          if(verified) setAccountError(message);
+          else router.replace("verify-otp");
+        }
       } catch (error) {
         console.error("An error occurred during registration:", error);
       }
@@ -175,8 +179,7 @@ const Register = () => {
                 className="icons w-[14px] h-[13px]"
               />
               <p className="text-[#c40000] text-[12px] font-ember">
-                {accountError} {" "}
-                <A href="sign-in">Sign in</A> and{" "}
+                {accountError} <A href="sign-in">Sign in</A> and{" "}
                 <A href="learn-more">learn more</A>
               </p>
             </div>
@@ -200,7 +203,9 @@ const Register = () => {
           error={errors.confirmPassword}
           onChange={onChange}
         />
-        <Button type="submit" _class="w-full">Continue</Button>
+        <Button type="submit" _class="w-full">
+          Continue
+        </Button>
 
         <p className="text-[12px] my-[18px]">
           By creating an account, you agree to Amazon&apos;s &nbsp;

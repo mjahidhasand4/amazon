@@ -12,8 +12,7 @@ const POST = async (request: Request) => {
     const mobileReg = /^\d+$/;
     const isEmail = emailReg.test(contact);
     const isMobile = mobileReg.test(contact);
-    const isEmailOrMobile =
-      (isEmail && "email") || (isMobile && "mobile_phone_number");
+    const isEmailOrMobile = (isEmail && "email") || (isMobile && "mobile_phone_number");
     const OTP = Math.floor(100000 + Math.random() * 900000);
 
     if (
@@ -29,24 +28,20 @@ const POST = async (request: Request) => {
         const isMobilePhoneNumberVerified =
           rows[0].is_mobile_phone_number_verified;
 
-        if (
-          (isEmail && isEmailVerified) ||
-          (isMobile && isMobilePhoneNumberVerified)
-        ) {
+        if (isEmailVerified || isMobilePhoneNumberVerified)
           return NextResponse.json(
             {
-              error: "Registration failed",
               message: `There's already an account with this ${
                 (isEmail && "email") || (isMobile && "mobile phone number")
               }.`,
+              verified: true,
             },
-            { status: 400 }
+            { status: 409 }
           );
-        }
 
         const existingUserId = rows[0].id;
         await sql`UPDATE USERS SET otp_code=${OTP} WHERE id=${existingUserId}`;
-        const verify_token = jwt.sign(
+        const verify_otp_token = jwt.sign(
           { id: existingUserId, type: isEmailOrMobile },
           process.env.JWT_ACCESS_TOKEN_SECRET!,
           { expiresIn: "15m" }
@@ -55,9 +50,10 @@ const POST = async (request: Request) => {
         if (isEmail) SendMail(contact, `Your OTP code is: ${OTP}`);
         if (isMobile)
           SendMessage(`${countryCode}${contact}`, `Your OTP code is: ${OTP}`);
+
         cookies().set({
           name: "verify_otp_token",
-          value: verify_token,
+          value: verify_otp_token,
           httpOnly: true,
           expires: Date.now() + 1000 * 60 * 15,
           sameSite: true,
@@ -65,8 +61,13 @@ const POST = async (request: Request) => {
         });
 
         return NextResponse.json(
-          { success: true, message: "User exist. Please verify OTP code." },
-          { status: 200 }
+          {
+            message: `There's already an account with this ${
+              (isEmail && "email") || (isMobile && "mobile phone number")
+            }.`,
+            verified: false,
+          },
+          { status: 409 }
         );
       }
 
@@ -76,27 +77,28 @@ const POST = async (request: Request) => {
           isEmail ? contact : ""
         }, ${isMobile ? contact : ""}, ${OTP}) RETURNING id;`;
       const newUserId = newUser.rows[0].id;
-      const verify_token = jwt.sign(
+      const verify_otp_token = jwt.sign(
         { id: newUserId, type: isEmailOrMobile },
         process.env.JWT_ACCESS_TOKEN_SECRET!
       );
 
       if (isEmail) SendMail(contact, `Your OTP code is: ${OTP}`);
-      if (isMobile) SendMessage(`${countryCode}${contact}`, `Your OTP code is: ${OTP}`);
-      
+      if (isMobile)
+        SendMessage(`${countryCode}${contact}`, `Your OTP code is: ${OTP}`);
+
+      const expires = new Date().getTime() + 1000 * 60 * 15;
       cookies().set({
         name: "verify_otp_token",
-        value: verify_token,
+        value: verify_otp_token,
         httpOnly: true,
-        expires: Date.now() + 1000 * 60 * 15,
+        expires,
         sameSite: true,
         secure: true,
       });
 
       return NextResponse.json(
         {
-          success: true,
-          message: "Registration successfull. Please verify OTP code.",
+          message: "Account creation successfull! Please verify the OTP code.",
         },
         { status: 201 }
       );

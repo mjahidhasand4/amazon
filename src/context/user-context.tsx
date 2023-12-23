@@ -1,30 +1,18 @@
 "use client";
-import { createContext, useEffect, useState } from "react";
+import React, { createContext, useState } from "react";
 
-export const UserContext = createContext({
-  name: "",
-});
+export const UserContext = createContext({ name: "" });
 
 const UserProvider = ({ children }: { children: React.ReactNode }) => {
-  const [data, setData] = useState({
+  const [user, setUser] = useState({
     name: "",
   });
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch('http://localhost:3000/api/verify-user');
-        const result = await response.json();
-        setData(result);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
+  fetch("http://localhost:3000/api/verify-user");
 
-    fetchData();
-  }, []);
-
-  return <UserContext.Provider value={data}>{children}</UserContext.Provider>;
+  return (
+    <UserContext.Provider value={{ name: "" }}>{children}</UserContext.Provider>
+  );
 };
 
 export default UserProvider;

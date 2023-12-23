@@ -1,4 +1,3 @@
-import { sql } from "@vercel/postgres";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
@@ -7,52 +6,47 @@ interface DecodedToken extends JwtPayload {
   id: number;
 }
 
+const handleCommonError = (message: string, statusCode: number) =>
+  NextResponse.json({ error: message }, { status: statusCode });
+
 const GET = async () => {
   try {
-    const refreshToken = cookies().get("refreshToken");
+    const cookieStore = cookies();
+    const refreshToken = cookieStore.get("refreshToken");
+    const accessToken = cookieStore.get("accessToken");
 
-    if (!refreshToken) {
+    if (!refreshToken)
       return NextResponse.json(
         { success: false, message: "Refresh token not found" },
-        { status: 401 }
+        { status: 200 }
       );
-    }
 
-    const decodedToken = jwt.verify(
+    if (accessToken) return NextResponse.json({}, { status: 200 });
+    
+    const { id, exp } = jwt.verify(
       refreshToken.value,
       process.env.JWT_REFRESH_TOKEN_SECRET!
     ) as DecodedToken;
 
-    const { rows } =
-      await sql`SELECT name FROM USERS WHERE id=${decodedToken.id}`;
+    if (exp! < Date.now() / 1000)
+      return handleCommonError("Token expired", 400);
 
-    if (rows.length > 0) {
-      const { name } = rows[0];
-
-      const accessToken = jwt.sign(
-        { id: decodedToken.id },
-        process.env.JWT_ACCESS_TOKEN_SECRET!,
-        {
-          expiresIn: "15m",
-        }
-      );
-
-      cookies().set({
-        name: "accessToken",
-        value: accessToken,
-        httpOnly: true,
-        expires: Date.now() + 1000 * 60 * 15,
-        sameSite: true,
-        secure: true,
-      });
-
-      return NextResponse.json({ name }, { status: 200 });
-    }
-
-    return NextResponse.json(
-      { success: false, message: "User doesn't exist" },
-      { status: 400 }
+    const newAccessToken = jwt.sign(
+      { id },
+      process.env.JWT_ACCESS_TOKEN_SECRET!,
+      { expiresIn: "15m" }
     );
+
+    cookies().set({
+      name: "accessToken",
+      value: newAccessToken,
+      httpOnly: true,
+      expires: Date.now() + 1000 * 60 * 15,
+      sameSite: true,
+      secure: true,
+    });
+
+    return NextResponse.json({ success: true }, { status: 200 });
   } catch (error) {
     console.error("Token verification failed:", error);
     return NextResponse.json({ success: false }, { status: 400 });

@@ -20,7 +20,7 @@ const useClickOutside = <T extends HTMLElement = any>( handler: () => void, even
     return () => {
       (events || DEFAULT_EVENTS).forEach((fn) => document.removeEventListener(fn, listener));
     };
-  }, [ref, handler, nodes]);
+  }, [ref, handler, nodes, events]);
 
   return ref;
 }

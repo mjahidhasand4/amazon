@@ -1,3 +1,1 @@
-export { UserContext } from "./user-context";
-
-export { default as UserProvider } from "./user-context";
+export { default as UserProvider, UserContext } from "./user-context";

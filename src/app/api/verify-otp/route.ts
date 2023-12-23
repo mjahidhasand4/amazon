@@ -14,14 +14,19 @@ const handleCommonError = (message: string, statusCode: number) =>
 
 const GET = async () => {
   try {
-    const token = cookies().get("verify_otp_token");
+    const cookieStore = cookies();
+    const token = cookieStore.get("verify_otp_token");
+
     if (!token) return handleCommonError("Token not found", 400);
 
     const decodedToken = jwt.verify(
       token.value!,
       process.env.JWT_ACCESS_TOKEN_SECRET!
     ) as DecodedToken;
-    const { id, type } = decodedToken;
+    const { id, type, exp } = decodedToken;
+
+    if (exp! < Date.now() / 1000)
+      return handleCommonError("Token expired", 400);
     const { rows } =
       await sql`SELECT email, mobile_phone_number, country_code FROM USERS WHERE id=${id};`;
 
@@ -40,7 +45,7 @@ const GET = async () => {
       );
     }
   } catch (error) {
-    return handleCommonError("Internal Server Error", 500);
+    return handleCommonError("Unauthorized", 401);
   }
 };
 
@@ -49,14 +54,18 @@ const POST = async (request: Request) => {
     const { otp } = await request.json();
     if (`${otp}`.length !== 6) return handleCommonError("Not a valid OTP", 400);
 
-    const token = cookies().get("verify_otp_token");
+    const cookieStore = cookies();
+    const token = cookieStore.get("verify_otp_token");
     if (!token) return handleCommonError("Token not found", 400);
 
     const decodedToken = jwt.verify(
       token.value!,
       process.env.JWT_ACCESS_TOKEN_SECRET!
     ) as DecodedToken;
-    const { id, type } = decodedToken;
+    const { id, type, exp } = decodedToken;
+
+    if (exp! < Date.now() / 1000) return handleCommonError("Token expired", 400);
+
     const { rows } = await sql`SELECT otp_code FROM USERS WHERE id=${id};`;
 
     if (!rows || rows.length === 0)
@@ -87,7 +96,6 @@ const POST = async (request: Request) => {
       cookies().set({
         name: "accessToken",
         value: accessToken,
-        httpOnly: true,
         expires: Date.now() + 1000 * 60 * 15,
         sameSite: true,
         secure: true,
@@ -95,7 +103,6 @@ const POST = async (request: Request) => {
       cookies().set({
         name: "refreshToken",
         value: refreshToken,
-        httpOnly: true,
         expires: Date.now() + 1000 * 60 * 60 * 24 * 365,
         sameSite: true,
         secure: true,
@@ -112,17 +119,19 @@ const POST = async (request: Request) => {
 
 const PUT = async () => {
   try {
-    const token = cookies().get("verify_otp_token");
+    const cookieStore = cookies();
+    const token = cookieStore.get("verify_otp_token");
     if (!token) return handleCommonError("Token not found", 400);
 
-    const { id, type } = jwt.verify(
+    const { id, type, exp } = jwt.verify(
       token.value!,
       process.env.JWT_ACCESS_TOKEN_SECRET!
     ) as DecodedToken;
 
+    if (exp! < Date.now() / 1000) return handleCommonError("Token expired", 400);
+
     const { rows } =
       await sql`SELECT email, mobile_phone_number, country_code FROM USERS WHERE id=${id};`;
-
     if (!rows || rows.length === 0)
       return handleCommonError("User does not exist", 400);
 

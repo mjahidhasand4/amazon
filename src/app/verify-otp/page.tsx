@@ -1,7 +1,7 @@
 "use client";
 import { A, Button, Input } from "@/components";
 import { useRouter } from "next/navigation";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 
 const VerifyOTP = () => {
   const router = useRouter();
@@ -13,9 +13,19 @@ const VerifyOTP = () => {
 
   const [success, setSuccess] = useState("");
 
-  fetch("http://localhost:3000/api/verify-otp")
-    .then((res) => res.json())
-    .then((data) => setInfo(data));
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/api/verify-otp');
+        const result = await response.json();
+        setInfo(result);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const onClick = async (event: any) => {
     event.preventDefault();
