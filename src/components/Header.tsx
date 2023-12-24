@@ -1,8 +1,10 @@
+"use client";
 import Link from "next/link";
+import { useContext } from "react";
+import { UserContext } from "@/context";
 
-const Header = async () => {
-  const response = await fetch("http://localhost:3000/api/get/user");
-  const name = await response.json();
+const Header = () => {
+  const { name } = useContext(UserContext);
   return (
     <header>
       <div className="h-[60px] px-[11px] bg-[#00453e] flex items-center">
@@ -65,7 +67,7 @@ const Header = async () => {
         <div>
           <button className="h-[50px] px-[9px] border border-transparent hover:border-white rounded-sm flex flex-col justify-center gap-0.5">
             <span className="text-white text-[12px] font-ember leading-none">
-              Hello, sign in
+              Hello, {name ? name.split(" ")[0] : "sign in"}
             </span>
             <span className="flex items-center gap-1">
               <span className="text-white text-[14px] font-ember font-bold leading-none">

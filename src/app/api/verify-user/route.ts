@@ -16,26 +16,16 @@ const GET = async () => {
     const accessToken = cookieStore.get("accessToken");
 
     if (!refreshToken)
-      return NextResponse.json(
-        { success: false, message: "Refresh token not found" },
-        { status: 200 }
-      );
+      return NextResponse.json({ success: false, message: "Refresh token not found" }, { status: 200 });
 
     if (accessToken) return NextResponse.json({}, { status: 200 });
     
-    const { id, exp } = jwt.verify(
-      refreshToken.value,
-      process.env.JWT_REFRESH_TOKEN_SECRET!
-    ) as DecodedToken;
+    const { id, exp } = jwt.verify(refreshToken.value, process.env.JWT_REFRESH_TOKEN_SECRET!) as DecodedToken;
 
     if (exp! < Date.now() / 1000)
       return handleCommonError("Token expired", 400);
 
-    const newAccessToken = jwt.sign(
-      { id },
-      process.env.JWT_ACCESS_TOKEN_SECRET!,
-      { expiresIn: "15m" }
-    );
+    const newAccessToken = jwt.sign({ id }, process.env.JWT_ACCESS_TOKEN_SECRET!, { expiresIn: "15m" });
 
     cookies().set({
       name: "accessToken",

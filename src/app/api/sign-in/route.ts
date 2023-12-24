@@ -19,12 +19,17 @@ const POST = async (request: Request) => {
       cookies().set({
         name: "accessToken",
         value: accessToken,
+        httpOnly: true,
         expires: Date.now() + 1000 * 60 * 15,
+        sameSite: true,
+        secure: true,
       });
       cookies().set({
         name: "refreshToken",
         value: refreshToken,
+        httpOnly: true,
         expires: Date.now() + 1000 * 60 * 60 * 24 * 365,
+        sameSite: true,
         secure: true,
       });
       return NextResponse.json({ success: true }, { status: 200 });
