@@ -52,9 +52,23 @@
     src: url(https://m.media-amazon.com/images/S/sash/2SazJx$EeTHfhMN.woff2) format("woff2"), url(https://m.media-amazon.com/images/S/sash/CjbL$jCCegyfqZ7.woff) format("woff")
 }
 
+@layer utilities {
+    .no-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+    .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+  }
+}
+
 .asset {
     background-image: url(/icons/asset.png);
     background-size: 350px;
+}
+
+.asset_3 {
+    background-image: url(/images/asset_3.png);
 }
 
 .flag {
