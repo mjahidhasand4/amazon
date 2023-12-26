@@ -53,7 +53,7 @@ const Home = () => {
         />
       </button>
 
-      <section className="w-full absolute top-[39.6%] z-10">
+      <section className="w-full mt-[-366px] relative z-10">
         <div className="py-[10px] px-5 mx-2 flex items-start gap-4">
           <Card2
             title="Gaming accessories"
@@ -653,18 +653,6 @@ const Home = () => {
             },
           ]}
         />
-
-        <div className="w-full mt-4 pt-8 pb-4 bg-white">
-          <div className="pt-4 pb-2 border rounded flex flex-col items-center justify-center">
-            <p className="text-[#0f1111] text-[13px] font-ember">
-              See personalized recommendations
-            </p>
-            <Button variant="gradient">Sign in</Button>
-            <p className="text-[#0f1111] text-[12px] font-ember">
-              New customer? <A href="register">Start here.</A>
-            </p>
-          </div>
-        </div>
       </section>
     </main>
   );
