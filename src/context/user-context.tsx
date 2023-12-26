@@ -11,9 +11,9 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        await fetch("http://localhost:3000/api/verify-user");
+        await fetch(process.env.BASE_API! + "verify-user");
 
-        const response = await fetch("http://localhost:3000/api/get/user");
+        const response = await fetch(process.env.BASE_API! + "get/user");
         const { name } = await response.json();
 
         setUser({ name });

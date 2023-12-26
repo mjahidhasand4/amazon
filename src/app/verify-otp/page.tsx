@@ -16,11 +16,11 @@ const VerifyOTP = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:3000/api/verify-otp');
+        const response = await fetch(process.env.BASE_API! + "verify-otp");
         const result = await response.json();
         setInfo(result);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
       }
     };
 
@@ -79,7 +79,9 @@ const VerifyOTP = () => {
           </A>
         </p>
         <Input name="otp" title="Enter OTP" _class="w-full" success={success} />
-        <Button type="submit" _class="w-full">Create your Amazon account</Button>
+        <Button type="submit" _class="w-full">
+          Create your Amazon account
+        </Button>
         <p className="text-[12px] my-[18px]">
           By creating an account, you agree to Amazon&apos;s &nbsp;
           <A href="">Conditions of Use</A> and <A href="">Privacy Notice</A>.
