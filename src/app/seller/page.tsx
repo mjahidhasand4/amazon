@@ -11,7 +11,7 @@ const Seller = () => {
           <span>6</span>
         </button>
         <button>
-          <span className="">Today's Sales</span>
+          <span className="">Today&apos;s Sales</span>
           <span>$131</span>
         </button>
         <button>
