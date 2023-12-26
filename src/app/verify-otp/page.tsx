@@ -16,7 +16,7 @@ const VerifyOTP = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(process.env.BASE_API! + "verify-otp");
+        const response = await fetch(process.env.NEXT_PUBLIC_BASE_API + "verify-otp");
         const result = await response.json();
         setInfo(result);
       } catch (error) {

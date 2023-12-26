@@ -11,3 +11,16 @@ CREATE TABLE USERS (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE PRODUCTS (
+    id SERIAL PRIMARY KEY NOT NULL,
+    product_id NOT NULL,
+    product_name NOT NULL,
+    manufracture NOT NULL,
+    intended_use NOT NULL,
+    target_audience NOT NULL,
+    other_attribute NOT NULL,
+    subject_matter NOT NULL,
+    search_terms NOT NULL,
+    platinum_keywords NOT NULL
+);
